@@ -14,7 +14,7 @@
 
 ## TL;DR
 
-配置文件位于`config/config.yaml`，运行前需要按需配置。
+配置文件位于`config/config.yaml`，运行前需要按需配置。（对于使用的中继适配器，需要参考其README文件来填写）
 
 在项目根目录运行`start.sh`，或者进入`src`目录然后运行`python3 main.py`即可启动。
 
