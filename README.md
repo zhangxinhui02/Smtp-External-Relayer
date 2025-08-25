@@ -40,7 +40,7 @@
 
 ## 中继适配器开发
 
-可以参考`aliyun_directmail`模块进行开发。
+可以参考`aliyun_directmail`适配器进行开发。
 
 中继适配器需要存放于`src/adapter`目录中，作为一个单独的Python模块。
 
