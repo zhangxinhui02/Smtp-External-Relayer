@@ -1,0 +1,18 @@
+log:  # 日志配置
+  level: 'INFO'  # 日志级别
+  dump_enabled: true  # 是否保存日志文件
+  dump_retain_days: 30  # 日志保留天数
+
+smtp_server:  # SMTP服务器配置
+  listen_host: 127.0.0.1  # 监听地址
+  listen_port: 2525  # 监听端口
+
+adapter:  # 后端转发适配器配置
+  use: aliyun_directmail  # 使用哪个适配器
+
+aliyun_directmail:  # 阿里云DirectMail适配器
+  access_key_id: ""  # 鉴权Key ID
+  access_key_secret: ""  # 鉴权Key Secret
+  smtp_ssl_encrypt: true  # 是否通过阿里云DM的SMTP SSL协议来转发
+  static_addresses_password: {}  # 静态发信地址与密码的键值对
+  mail_addresses_pool_count: 6  # 工作地址池内最多同时处理的地址数量
