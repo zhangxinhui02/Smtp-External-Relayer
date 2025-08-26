@@ -36,7 +36,9 @@
 
 ## 已有的中继适配器
 
-*在`src/adapter`目录中查看所有中继适配器及其说明文件。*
+*使用前在`src/adapter`目录中查看所有中继适配器及其说明文件。*
+
+- Microsoft Exchange Online: 调用Microsoft Graph API和Microsoft Exchange Online Powershell Management，动态为发信人地址新建共享邮箱(共享邮箱无硬性上限)，随后通过特定用户转发邮件，以满足大量发信地址的SMTP中继的需求。
 
 - ~~阿里云DirectMail: 已弃用。使用一段时间后发现阿里云DirectMail对于删除发信地址的操作有每月的数量限制，无法满足大量发信地址的需求。~~
 
