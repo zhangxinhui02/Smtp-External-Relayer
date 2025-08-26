@@ -163,7 +163,7 @@ class Adapter(AdapterBase):
             logger.error(error)
             raise Exception(error)
 
-    def start(self):
+    def main_start(self):
         # 地址创建队列
         self.__multiprocessing_manager = mp.Manager()
         self.working_addresses = self.__multiprocessing_manager.dict()

@@ -31,6 +31,6 @@ if __name__ == '__main__':
     logger.info('Config loaded.')
     logger.info(f'Using adapter: {ADAPTER.use}')
     logger.info('Starting SMTP External Relayer...')
-    smtp_server.adapter.start()
+    smtp_server.adapter.main_start()
     asyncio.run(smtp_server.start())
     logger.info('SMTP External Relayer stopped.')

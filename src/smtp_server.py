@@ -34,6 +34,10 @@ class Handler:
             return f'451 Temporary failure: {e}'
 
 async def start():
+    if inspect.iscoroutinefunction(adapter.start):
+        await adapter.start()
+    else:
+        adapter.start()
     controller = Controller(Handler(), hostname=SMTP.listen_host, port=SMTP.listen_port)
     controller.start()
     logger.info(f'SMTP server listening on {SMTP.listen_host}:{SMTP.listen_port}.')

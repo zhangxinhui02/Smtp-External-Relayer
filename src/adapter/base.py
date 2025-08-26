@@ -5,6 +5,9 @@ class AdapterBase:
     def __init__(self):
         self.name: str = 'base_adapter'
 
+    def main_start(self):
+        pass
+
     def start(self):
         pass
 
