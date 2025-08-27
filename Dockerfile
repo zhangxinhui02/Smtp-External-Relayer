@@ -1,5 +1,5 @@
 # 完整构建，包含所有适配器和依赖，镜像体积较大
-FROM python:3.11-slim
+FROM python:3.11-slim-bookworm
 
 ENV PYTHONUNBUFFERED=1
 

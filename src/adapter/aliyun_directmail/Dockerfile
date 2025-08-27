@@ -1,5 +1,5 @@
 # 对应阿里云DirectMail适配器的镜像
-FROM python:3.11-slim
+FROM python:3.11-slim-bookworm
 
 ENV PYTHONUNBUFFERED=1
 
@@ -11,6 +11,7 @@ COPY . .
 RUN find src/adapter -maxdepth 1 -type d ! -name '.' ! -name 'aliyun_directmail' -exec rm -rf {} + && \
     sed -i 's/^\(\s*use:\s*\).*/\1aliyun_directmail/' config/config.yaml && \
     pip install --no-cache-dir -r src/requirements.txt && \
+    pwd && \
     pip install --no-cache-dir -r src/adapter/aliyun_directmail/requirements.txt
 
 EXPOSE 2525

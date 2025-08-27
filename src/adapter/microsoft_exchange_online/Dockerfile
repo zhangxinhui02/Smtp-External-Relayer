@@ -1,5 +1,5 @@
 # 对应Microsoft Exchange Online适配器的镜像
-FROM python:3.11-slim
+FROM python:3.11-slim-bookworm
 
 ENV PYTHONUNBUFFERED=1
 
@@ -11,7 +11,16 @@ COPY . .
 RUN find src/adapter -maxdepth 1 -type d ! -name '.' ! -name 'microsoft_exchange_online' -exec rm -rf {} + && \
     sed -i 's/^\(\s*use:\s*\).*/\1microsoft_exchange_online/' config/config.yaml && \
     pip install --no-cache-dir -r src/requirements.txt && \
+    pwd && \
     pip install --no-cache-dir -r src/adapter/microsoft_exchange_online/requirements.txt
+
+# 安装Powershell
+RUN apt-get update && \
+    apt-get install -y wget apt-transport-https software-properties-common && \
+    wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | apt-key add - && \
+    sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/debian/12/prod bookworm main" > /etc/apt/sources.list.d/microsoft.list' && \
+    apt-get update && \
+    apt-get install -y powershell
 
 EXPOSE 2525
 
