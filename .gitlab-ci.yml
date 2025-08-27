@@ -1,0 +1,28 @@
+stages:
+  - build-all
+  - build-aliyun-directmail
+  - build-microsoft-exchange-online
+
+job-build-all:
+  stage: build-all
+  image: reg.mikumikumi.xyz/base/kaniko-builder:latest
+  script:
+    - build
+
+job-build-aliyun-directmail:
+  stage: build-aliyun-directmail
+  image: reg.mikumikumi.xyz/base/kaniko-builder:latest
+  variables:
+    BUILD_DOCKERFILE: src/adapter/aliyun_directmail/Dockerfile
+    BUILD_DESTINATION: reg.mikumikumi.xyz/cluster/smtp-external-relayer-by-aliyun-directmail:latest
+  script:
+    - build
+
+job-build-microsoft-exchange-online:
+  stage: build-microsoft-exchange-online
+  image: reg.mikumikumi.xyz/base/kaniko-builder:latest
+  variables:
+    BUILD_DOCKERFILE: src/adapter/microsoft_exchange_online/Dockerfile
+    BUILD_DESTINATION: reg.mikumikumi.xyz/cluster/smtp-external-relayer-by-microsoft-exchange-online:latest
+  script:
+    - build
