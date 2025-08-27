@@ -11,7 +11,8 @@ COPY . .
 RUN find src/adapter -maxdepth 1 -type d ! -name '.' ! -name 'aliyun_directmail' -exec rm -rf {} + && \
     sed -i 's/^\(\s*use:\s*\).*/\1aliyun_directmail/' config/config.yaml && \
     pip install --no-cache-dir -r src/requirements.txt && \
-    pwd && \
+    apt-get update && apt-get install tree && \
+    pwd && tree -a && \
     pip install --no-cache-dir -r src/adapter/aliyun_directmail/requirements.txt
 
 EXPOSE 2525
