@@ -7,7 +7,18 @@ WORKDIR /app
 
 COPY . .
 
+# 安装依赖
 RUN pip install --no-cache-dir -r requirements.txt
+
+# 安装Powershell和ExchangeOnlineManagement工具
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends wget apt-transport-https software-properties-common && \
+    wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | apt-key add - && \
+    sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/debian/12/prod bookworm main" > /etc/apt/sources.list.d/microsoft.list' && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends powershell && \
+    rm -rf /var/lib/apt/lists/* && \
+    pwsh -Command "Install-Module ExchangeOnlineManagement"
 
 EXPOSE 2525
 

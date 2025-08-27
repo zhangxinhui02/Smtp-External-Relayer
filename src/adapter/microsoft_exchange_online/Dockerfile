@@ -15,14 +15,15 @@ RUN cd src/adapter && \
     pip install --no-cache-dir -r src/requirements.txt && \
     pip install --no-cache-dir -r src/adapter/microsoft_exchange_online/requirements.txt
 
-# 安装Powershell
+# 安装Powershell和ExchangeOnlineManagement工具
 RUN apt-get update && \
-    apt-get install -y wget apt-transport-https software-properties-common && \
+    apt-get install -y --no-install-recommends wget apt-transport-https software-properties-common && \
     wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | apt-key add - && \
     sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/debian/12/prod bookworm main" > /etc/apt/sources.list.d/microsoft.list' && \
     apt-get update && \
-    apt-get install -y powershell && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -y --no-install-recommends powershell && \
+    rm -rf /var/lib/apt/lists/* && \
+    pwsh -Command "Install-Module ExchangeOnlineManagement"
 
 EXPOSE 2525
 
