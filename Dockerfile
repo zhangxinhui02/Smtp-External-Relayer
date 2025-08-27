@@ -18,7 +18,7 @@ RUN apt-get update && \
     apt-get update && \
     apt-get install -y --no-install-recommends powershell && \
     rm -rf /var/lib/apt/lists/* && \
-    pwsh -Command "Install-Module ExchangeOnlineManagement -Force -AllowClobber -Scope AllUsers"
+    pwsh -Command "Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted; Install-Module ExchangeOnlineManagement -Force -AllowClobber -Scope AllUsers"
 
 EXPOSE 2525
 
