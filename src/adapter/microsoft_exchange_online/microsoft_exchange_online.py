@@ -37,13 +37,13 @@ class Adapter(AdapterBase):
             )
         # 环境变量覆盖
         for field, info in self.CONFIG.model_fields.items():
-            if val_raw := os.environ.get(f'APP_{self.name.upper()}_{field}'):
+            if val_raw := os.environ.get(f'APP_{self.name.upper()}_{field.upper()}'):
                 val_type = info.annotations
                 try:
                     setattr(self.CONFIG, field, val_type(val_raw))
                 except Exception as e:
                     raise ValueError(f'Failed to parse config `{self.name}.{field}` '
-                                     f'from env `APP_{self.name.upper()}_{field}`: {e}')
+                                     f'from env `APP_{self.name.upper()}_{field.upper()}`: {e}')
         # 必须指定证书路径或base64编码的证书
         if (not self.CONFIG.certificate_path) and (not self.CONFIG.certificate_b64):
             error = 'You must specify either a certificate_path or a certificate_b64.'

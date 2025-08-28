@@ -42,13 +42,13 @@ class Adapter(AdapterBase):
             )
         # 环境变量覆盖
         for field, info in self.CONFIG.model_fields.items():
-            if val_raw := os.environ.get(f'APP_{self.name.upper()}_{field}'):
+            if val_raw := os.environ.get(f'APP_{self.name.upper()}_{field.upper()}'):
                 val_type = info.annotations
                 try:
                     setattr(self.CONFIG, field, val_type(val_raw))
                 except Exception as e:
                     raise ValueError(f'Failed to parse config `{self.name}.{field}` '
-                                     f'from env `APP_{self.name.upper()}_{field}`: {e}')
+                                     f'from env `APP_{self.name.upper()}_{field.upper()}`: {e}')
         __config = open_api_models.Config(
             access_key_id=self.CONFIG.access_key_id,
             access_key_secret=self.CONFIG.access_key_secret
