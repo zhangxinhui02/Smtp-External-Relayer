@@ -43,7 +43,7 @@ class Adapter(AdapterBase):
         # 环境变量覆盖
         for field, info in self.CONFIG.model_fields.items():
             if val_raw := os.environ.get(f'APP_{self.name.upper()}_{field.upper()}'):
-                val_type = info.annotations
+                val_type = info.annotation
                 try:
                     setattr(self.CONFIG, field, val_type(val_raw))
                 except Exception as e:

@@ -31,7 +31,7 @@ def initialize():
     # 环境变量覆盖
     for field, info in LOG.model_fields.items():
         if val_raw := os.environ.get(f'APP_LOG_{field.upper()}'):
-            val_type = info.annotations
+            val_type = info.annotation
             try:
                 setattr(LOG, field, val_type(val_raw))
             except Exception as e:
@@ -39,7 +39,7 @@ def initialize():
                                  f'from env `APP_LOG_{field.upper()}`: {e}')
     for field, info in SMTP.model_fields.items():
         if val_raw := os.environ.get(f'APP_SMTP_{field.upper()}'):
-            val_type = info.annotations
+            val_type = info.annotation
             try:
                 setattr(SMTP, field, val_type(val_raw))
             except Exception as e:
@@ -47,7 +47,7 @@ def initialize():
                                  f'from env `APP_SMTP_{field.upper()}`: {e}')
     for field, info in ADAPTER.model_fields.items():
         if val_raw := os.environ.get(f'APP_ADAPTER_{field.upper()}'):
-            val_type = info.annotations
+            val_type = info.annotation
             try:
                 setattr(ADAPTER, field, val_type(val_raw))
             except Exception as e:
