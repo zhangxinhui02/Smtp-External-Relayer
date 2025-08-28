@@ -1,3 +1,4 @@
+import os
 import yaml
 from pydantic import BaseModel
 
@@ -27,7 +28,31 @@ def initialize():
     LOG = LogConfig(**__data['log'])
     SMTP = SmtpServerConfig(**__data['smtp_server'])
     ADAPTER = AdapterConfig(**__data['adapter'])
-
+    # 环境变量覆盖
+    for field, info in LOG.model_fields.items():
+        if val_raw := os.environ.get(f'APP_LOG_{field}'):
+            val_type = info.annotations
+            try:
+                setattr(LOG, field, val_type(val_raw))
+            except Exception as e:
+                raise ValueError(f'Failed to parse config `LOG.{field}` '
+                                 f'from env `APP_LOG_{field}`: {e}')
+    for field, info in SMTP.model_fields.items():
+        if val_raw := os.environ.get(f'APP_SMTP_{field}'):
+            val_type = info.annotations
+            try:
+                setattr(SMTP, field, val_type(val_raw))
+            except Exception as e:
+                raise ValueError(f'Failed to parse config `SMTP.{field}` '
+                                 f'from env `APP_SMTP_{field}`: {e}')
+    for field, info in ADAPTER.model_fields.items():
+        if val_raw := os.environ.get(f'APP_ADAPTER_{field}'):
+            val_type = info.annotations
+            try:
+                setattr(ADAPTER, field, val_type(val_raw))
+            except Exception as e:
+                raise ValueError(f'Failed to parse config `ADAPTER.{field}` '
+                                 f'from env `APP_ADAPTER_{field}`: {e}')
 
 if not initialized:
     initialize()

@@ -20,6 +20,18 @@
 
 如果启用了日志，日志会输出到`log`目录。
 
+## 配置
+
+为了适配容器与Kubernetes环境，此SMTP中继可以通过环境变量配置个别/所有配置项。环境变量会覆盖配置文件中的配置。
+
+配置文件中每个配置项对应的环境变量名规则为。`APP_<TABLE>_<KEY>`。例如：
+
+  - `APP_LOG_LEVEL`: 对应`log.level`。
+
+  - `APP_SMTP_SERVER_LISTEN_HOST`: 对应`smtp_server.listen_host`。
+
+  - `APP_MICROSOFT_EXCHANGE_ONLINE_CLIENT_SECRET`: 对应`microsoft_exchange_online.client_secret`。
+
 ## 结构
 
 此SMTP中继分为两部分。
@@ -52,7 +64,7 @@
 
 `Adapter`类需要重写`AdapterBase`的以下属性和函数：
 
-  - `name`属性: 中继适配器名称。
+  - `name`属性: 中继适配器名称，即适配器的可用于导入的模块名。
 
   - `main_start()`函数: 适配器初始化函数，在程序启动时会被主模块调用，主要用于某些需要从主模块初始化的特殊情况(如使用`multiprocessing`)。如果不需要可以不重写。
 

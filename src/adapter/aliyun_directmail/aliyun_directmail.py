@@ -1,4 +1,5 @@
 # 适配阿里云邮件推送服务(DirectMail)
+import os
 import time
 import yaml
 import random
@@ -39,6 +40,15 @@ class Adapter(AdapterBase):
             self.CONFIG = Config(
                 **yaml.safe_load(f)['aliyun_directmail']
             )
+        # 环境变量覆盖
+        for field, info in self.CONFIG.model_fields.items():
+            if val_raw := os.environ.get(f'APP_{self.name.upper()}_{field}'):
+                val_type = info.annotations
+                try:
+                    setattr(self.CONFIG, field, val_type(val_raw))
+                except Exception as e:
+                    raise ValueError(f'Failed to parse config `{self.name}.{field}` '
+                                     f'from env `APP_{self.name.upper()}_{field}`: {e}')
         __config = open_api_models.Config(
             access_key_id=self.CONFIG.access_key_id,
             access_key_secret=self.CONFIG.access_key_secret
