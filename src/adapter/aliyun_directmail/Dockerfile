@@ -15,7 +15,7 @@ RUN cd src/adapter && \
     pip install --no-cache-dir -r src/requirements.txt && \
     pip install --no-cache-dir -r src/adapter/aliyun_directmail/requirements.txt
 
-EXPOSE 2525
+EXPOSE 25
 
 WORKDIR /app/src
 

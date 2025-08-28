@@ -20,7 +20,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* && \
     pwsh -Command "Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted; Install-Module ExchangeOnlineManagement -Force -AllowClobber -Scope AllUsers"
 
-EXPOSE 2525
+EXPOSE 25
 
 WORKDIR /app/src
 

@@ -4,8 +4,8 @@ log:  # 日志配置
   dump_retain_days: 30  # 日志保留天数
 
 smtp_server:  # SMTP服务器配置
-  listen_host: 127.0.0.1  # 监听地址
-  listen_port: 2525  # 监听端口
+  listen_host: 0.0.0.0  # 监听地址
+  listen_port: 25  # 监听端口
 
 adapter:  # 后端转发适配器配置
   use: microsoft_exchange_online  # 使用哪个适配器
