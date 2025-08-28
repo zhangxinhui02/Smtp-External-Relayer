@@ -44,6 +44,8 @@ class Adapter(AdapterBase):
         for field, info in self.CONFIG.model_fields.items():
             if val_raw := os.environ.get(f'APP_{self.name.upper()}_{field.upper()}'):
                 val_type = info.annotation
+                if val_type not in (str, int, float):
+                    continue
                 try:
                     setattr(self.CONFIG, field, val_type(val_raw))
                 except Exception as e:

@@ -32,6 +32,8 @@ def initialize():
     for field, info in LOG.model_fields.items():
         if val_raw := os.environ.get(f'APP_LOG_{field.upper()}'):
             val_type = info.annotation
+            if val_type not in (str, int, float):
+                continue
             try:
                 setattr(LOG, field, val_type(val_raw))
             except Exception as e:
@@ -40,6 +42,8 @@ def initialize():
     for field, info in SMTP.model_fields.items():
         if val_raw := os.environ.get(f'APP_SMTP_{field.upper()}'):
             val_type = info.annotation
+            if val_type not in (str, int, float):
+                continue
             try:
                 setattr(SMTP, field, val_type(val_raw))
             except Exception as e:
@@ -48,6 +52,8 @@ def initialize():
     for field, info in ADAPTER.model_fields.items():
         if val_raw := os.environ.get(f'APP_ADAPTER_{field.upper()}'):
             val_type = info.annotation
+            if val_type not in (str, int, float):
+                continue
             try:
                 setattr(ADAPTER, field, val_type(val_raw))
             except Exception as e:
