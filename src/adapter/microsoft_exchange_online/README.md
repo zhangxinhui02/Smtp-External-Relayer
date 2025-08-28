@@ -18,7 +18,9 @@
 
   - `sender`: 组织中用于实际代理发信的用户(邮箱)。
 
-  - `certificate_path`: 应用程序的鉴权证书路径(pfx格式)。
+  - `certificate_path`: 应用程序的鉴权证书路径(pfx格式)，指定certificate_b64时可以忽略。certificate_path与certificate_b64必须至少提供一个。
+
+  - `certificate_b64`: base64编码的证书。certificate_path与certificate_b64必须至少提供一个。
 
   - `certificate_password`: 应用程序的鉴权证书的密码。如果没有密码可以设置为空字符串。
 

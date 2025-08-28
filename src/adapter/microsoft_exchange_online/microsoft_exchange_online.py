@@ -21,7 +21,8 @@ class Config(BaseModel):
     client_id: str
     client_secret: str
     sender: str
-    certificate_path: str
+    certificate_path: str | None = None
+    certificate_b64: str | None = None
     certificate_password: str = ''
     powershell_cmd: str = 'pwsh'
 
@@ -43,6 +44,17 @@ class Adapter(AdapterBase):
                 except Exception as e:
                     raise ValueError(f'Failed to parse config `{self.name}.{field}` '
                                      f'from env `APP_{self.name.upper()}_{field}`: {e}')
+        # 必须指定证书路径或base64编码的证书
+        if (not self.CONFIG.certificate_path) and (not self.CONFIG.certificate_b64):
+            error = 'You must specify either a certificate_path or a certificate_b64.'
+            logger.error(error)
+            raise ValueError(error)
+        # 解码出证书
+        if self.CONFIG.certificate_b64:
+            with open('../cert.pfx', 'wb') as f:
+                f.write(base64.b64decode(self.CONFIG.certificate_b64))
+            self.CONFIG.certificate_path = '../cert.pfx'
+
         self.__access_token: str | None = None
         self.__access_token_expiring_time: datetime | None = None
         self.__existing_users: list = []  # 已有用户的缓存

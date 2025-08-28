@@ -17,12 +17,13 @@ aliyun_directmail:  # 阿里云DirectMail适配器
   static_addresses_password: {}  # 静态发信地址与密码的键值对
   mail_addresses_pool_count: 6  # 工作地址池内最多同时处理的地址数量
 
-microsoft_exchange_online:
-  organization: ""
-  tenant_id: ""
-  client_id: ""
-  client_secret: ""
-  sender: ""
-  certificate_path: ""
-  certificate_password: ""
+microsoft_exchange_online:  # Microsoft Exchange Online 适配器
+  organization: ""  # 组织域
+  tenant_id: ""  # 租户ID
+  client_id: ""  # 应用客户端ID
+  client_secret: ""  # 应用客户端密码
+  sender: ""  # 发信代理人
+  certificate_path: ""  # 证书路径，指定certificate_b64时可以忽略。certificate_path与certificate_b64必须至少提供一个
+  certificate_b64: ""  # base64编码的证书。certificate_path与certificate_b64必须至少提供一个
+  certificate_password: ""  # 证书密码，可为空
   powershell_cmd: pwsh  # Linux: pwsh, Windows: powershell
