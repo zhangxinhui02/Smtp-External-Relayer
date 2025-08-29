@@ -104,7 +104,8 @@ class Adapter(AdapterBase):
             ]
             if self.CONFIG.certificate_password:
                 cmd.extend(['-CertificatePassword', self.CONFIG.certificate_password])
-            logger.debug(f'Running command: `{' '.join(shlex.quote(x) for x in cmd)}`')
+            cmd_str = ' '.join(shlex.quote(x) for x in cmd)
+            logger.debug(f'Running command: `{cmd_str}`')
 
             process = await asyncio.create_subprocess_exec(
                 *cmd,
