@@ -101,6 +101,7 @@ class Adapter(AdapterBase):
                    f'-SenderAddress {self.CONFIG.sender} ')
             if self.CONFIG.certificate_password:
                 cmd += f' -CertificatePassword {self.CONFIG.certificate_password} '
+            logger.debug(f'Running command: `{cmd}`')
             process = await asyncio.create_subprocess_shell(
                 cmd,
                 stdout=asyncio.subprocess.PIPE,
