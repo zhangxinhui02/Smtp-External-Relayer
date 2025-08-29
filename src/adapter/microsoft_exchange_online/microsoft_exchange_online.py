@@ -1,5 +1,6 @@
 import os
 import yaml
+import shlex
 import base64
 import asyncio
 import aiohttp
@@ -91,19 +92,22 @@ class Adapter(AdapterBase):
             logger.info(f"New user found. Creating user `{user_addr}`...")
             if user_name == '':
                 user_name = user_addr.split('@')[0]
-            cmd = (f"{self.CONFIG.powershell_cmd} "
-                   f"-File 'adapter/microsoft_exchange_online/init-new-user.ps1' "
-                   f"-AppId '{self.CONFIG.client_id}' "
-                   f"-Organization '{self.CONFIG.organization}' "
-                   f"-CertificatePath '{self.CONFIG.certificate_path}' "
-                   f"-TargetAddress '{user_addr.replace('\'', '\'\'')}' "
-                   f"-TargetName '{user_name.replace('\'', '\'\'')}' "
-                   f"-SenderAddress '{self.CONFIG.sender}' ")
+            cmd = [
+                self.CONFIG.powershell_cmd,
+                '-File', 'adapter/microsoft_exchange_online/init-new-user.ps1',
+                '-AppId', self.CONFIG.client_id,
+                '-Organization', self.CONFIG.organization,
+                '-CertificatePath', self.CONFIG.certificate_path,
+                '-TargetAddress', user_addr,
+                '-TargetName', user_name,
+                '-SenderAddress', self.CONFIG.sender
+            ]
             if self.CONFIG.certificate_password:
-                cmd += f" -CertificatePassword '{self.CONFIG.certificate_password}' "
-            logger.debug(f'Running command: `{cmd}`')
-            process = await asyncio.create_subprocess_shell(
-                cmd,
+                cmd.extend(['-CertificatePassword', self.CONFIG.certificate_password])
+            logger.debug(f'Running command: `{' '.join(shlex.quote(x) for x in cmd)}`')
+
+            process = await asyncio.create_subprocess_exec(
+                *cmd,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE
             )
