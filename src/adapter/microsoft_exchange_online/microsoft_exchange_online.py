@@ -96,8 +96,8 @@ class Adapter(AdapterBase):
                    f"-AppId '{self.CONFIG.client_id}' "
                    f"-Organization '{self.CONFIG.organization}' "
                    f"-CertificatePath '{self.CONFIG.certificate_path}' "
-                   f"-TargetAddress '{user_addr}' "
-                   f"-TargetName '{user_name}' "
+                   f"-TargetAddress '{user_addr.replace('\'', '\'\'')}' "
+                   f"-TargetName '{user_name.replace('\'', '\'\'')}' "
                    f"-SenderAddress '{self.CONFIG.sender}' ")
             if self.CONFIG.certificate_password:
                 cmd += f" -CertificatePassword '{self.CONFIG.certificate_password}' "
