@@ -33,7 +33,7 @@ class Handler:
                 debug_msg = 'OK.' if _mail_data["ban_until"] is None \
                     else f'Banned until {_mail_data["ban_until"].strftime("%Y-%m-%d %H:%M:%S")}.'
                 logger.debug(f'\t{_mail_hash}: {debug_msg}')
-                for _mail_time in mail_data['time_history']:
+                for _mail_time in _mail_data['time_history']:
                     logger.debug(f'\t\t{_mail_time.strftime("%Y-%m-%d %H:%M:%S")}')
 
         while True:
