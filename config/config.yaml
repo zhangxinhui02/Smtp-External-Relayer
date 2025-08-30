@@ -27,3 +27,4 @@ microsoft_exchange_online:  # Microsoft Exchange Online 适配器
   certificate_b64: ""  # base64编码的证书。certificate_path与certificate_b64必须至少提供一个
   certificate_password: ""  # 证书密码，可为空
   powershell_cmd: pwsh  # Linux: pwsh, Windows: powershell
+  initial_user_waiting_seconds: 30  # 创建新用户后等待Exchange Online处理再发信的秒数

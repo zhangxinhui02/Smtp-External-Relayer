@@ -26,6 +26,8 @@
 
   - `powershell_cmd`: 操作系统中的Powershell命令。通常Linux系统为`pwsh`，Windows系统为`powershell`。
 
+  - `initial_user_waiting_seconds`: 创建新用户后等待Exchange Online处理再发信的秒数，默认为30。由于Exchange Online初始化用户缓慢，需要在初始化完毕后才能发信。
+
 ## 使用教程
 
 使用此中继适配器需要较复杂的配置，并且需要具有Microsoft Exchange Online的订阅(如Microsoft 365 E5开发者计划)。

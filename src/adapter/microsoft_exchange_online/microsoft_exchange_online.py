@@ -26,6 +26,7 @@ class Config(BaseModel):
     certificate_b64: str = ''
     certificate_password: str = ''
     powershell_cmd: str = 'pwsh'
+    initial_user_waiting_seconds: int = 30
 
 
 class Adapter(AdapterBase):
@@ -128,8 +129,7 @@ class Adapter(AdapterBase):
                 logger.info(f'Created new user `{user_name} <{user_addr}>`.')
                 self.__existing_users.append(user_addr)
                 logger.info('Waiting 15s for Exchange Online...')
-                await asyncio.sleep(15)  # Exchange Online 处理较慢，需要等待
-
+                await asyncio.sleep(self.CONFIG.initial_user_waiting_seconds)  # Exchange Online 处理较慢，需要等待
 
     async def start(self):
         # 初始化适配器，缓存已有的用户列表，不重复创建用户
