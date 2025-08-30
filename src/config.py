@@ -11,6 +11,12 @@ class LogConfig(BaseModel):
 class SmtpServerConfig(BaseModel):
   listen_host: str = '0.0.0.0'
   listen_port: int = 25
+  stop_email_loop: bool = True
+  email_loop_threshold: int = 3
+  email_loop_check_time_minutes: int = 3
+  email_loop_ban_time_minutes: int = 30
+  email_loop_alert_from_email:str = ''
+  email_loop_alert_to_email:str = ''
 
 class AdapterConfig(BaseModel):
     use: str = 'aliyun-directmail'
