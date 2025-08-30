@@ -135,7 +135,8 @@ class Handler:
         if len(cls.__email_loop_check_hash[body_hash]['time_history']) >= SMTP.email_loop_threshold:
             cls.__email_loop_check_hash[body_hash]['ban_until'] = (
                     now + timedelta(minutes=SMTP.email_loop_ban_time_minutes))
-            error = (f'Found email loop from `{from_addr}` to `{','.join(to_addrs)}` '
+            to_addrs_str = ','.join(to_addrs)
+            error = (f'Found email loop from `{from_addr}` to `{to_addrs_str}` '
                      f'in {SMTP.email_loop_check_time_minutes} minutes. '
                      f'Same email will be rejected in {SMTP.email_loop_ban_time_minutes} minutes.')
             logger.error(error)
