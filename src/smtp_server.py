@@ -62,23 +62,20 @@ class Handler:
             __show_email_loop_check_hash()
 
     @staticmethod
-    def __gen_email_loop_alert_envelope(from_name, from_addr, to_addr, text, attachment):
+    def __gen_email_loop_alert_envelope(from_addr, to_addr, text, attachment):
         """生成告警邮件的Envelope对象"""
         msg = EmailMessage()
-        msg['From'] = formataddr((from_name, from_addr))
+        msg['From'] = formataddr(('SMTP External Relayer Alerter', from_addr))
         msg['To'] = to_addr
         msg['Subject'] = 'Email Loop Alert'
         msg.set_content(text)
-        attachment_data = attachment
         msg.add_attachment(
-            attachment_data,
+            attachment,
             maintype='message',
             subtype='rfc822',
             filename="last-loop-email.eml"
         )
         envelope = Envelope()
-        envelope.mail_from = from_addr
-        envelope.rcpt_tos = [to_addr]
         envelope.content = msg.as_bytes()
         return envelope
 
@@ -148,7 +145,6 @@ class Handler:
                 else:
                     try:
                         alert_envelope = cls.__gen_email_loop_alert_envelope(
-                            from_name='SMTP External Relayer Alerter',
                             from_addr=SMTP.email_loop_alert_from_email,
                             to_addr=SMTP.email_loop_alert_to_email,
                             text=error,
