@@ -139,7 +139,7 @@ class Adapter(AdapterBase):
                 logger.info(f'Created new user `{user_name} <{user_addr}>`.')
                 self.__existing_users.append(user_addr)
                 self.__creating_users.remove(user_addr)
-                logger.info('Waiting 15s for Exchange Online...')
+                logger.info(f'Waiting {self.CONFIG.initial_user_waiting_seconds}s for Exchange Online...')
                 await asyncio.sleep(self.CONFIG.initial_user_waiting_seconds)  # Exchange Online 处理较慢，需要等待
 
     async def start(self):
