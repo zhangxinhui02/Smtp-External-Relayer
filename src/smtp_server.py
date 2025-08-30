@@ -30,7 +30,7 @@ class Handler:
             if len(cls.__email_loop_check_hash) == 0:
                 logger.debug(f'\tEmpty record.')
             for _mail_hash, _mail_data in cls.__email_loop_check_hash.items():
-                debug_msg = 'OK.' if _mail_data is None \
+                debug_msg = 'OK.' if _mail_data["ban_until"] is None \
                     else f'Banned until {_mail_data["ban_until"].strftime("%Y-%m-%d %H:%M:%S")}.'
                 logger.debug(f'\t{_mail_hash}: {debug_msg}')
                 for _mail_time in mail_data['time_history']:
