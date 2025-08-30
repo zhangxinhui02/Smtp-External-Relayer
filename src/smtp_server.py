@@ -187,7 +187,8 @@ class Handler:
                 error_message = error_message[4:]
                 return f'{error_code} {error_message}'
             except (ValueError, IndexError):
-                return f'451 Temporary failure: {e}'
+                logger.warning(f'Unexpected exception while decoding exception: {e}')
+                return f'550 Service error: {e}'
 
 async def start():
     if inspect.iscoroutinefunction(adapter.start):
