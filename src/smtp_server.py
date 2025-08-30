@@ -6,6 +6,7 @@ import logging
 import importlib
 from datetime import datetime, timedelta
 from email import message_from_bytes
+from email.header import make_header, decode_header
 from email.utils import getaddresses
 from email.message import EmailMessage
 from email.utils import parseaddr, formataddr
@@ -43,10 +44,11 @@ class Handler:
             __show_email_loop_check_hash()
 
             now = datetime.now()
+            to_delete_hash = []
             for mail_hash, mail_data in cls.__email_loop_check_hash.items():
                 if mail_data['ban_until'] is not None:
                     if now > mail_data['ban_until']:
-                        del cls.__email_loop_check_hash[mail_hash]
+                        to_delete_hash.append(mail_hash)
                         continue
 
                 mail_time_history = []
@@ -54,9 +56,11 @@ class Handler:
                     if now - mail_time < timedelta(minutes=SMTP.email_loop_check_time_minutes):
                         mail_time_history.append(mail_time)
                 if len(mail_time_history) == 0:
-                    del cls.__email_loop_check_hash[mail_hash]
+                    to_delete_hash.append(mail_hash)
                 else:
                     cls.__email_loop_check_hash[mail_hash]['time_history'] = mail_time_history
+            for mail_hash in to_delete_hash:
+                del cls.__email_loop_check_hash[mail_hash]
 
             logger.debug(f'After cleaning email loop check hash:')
             __show_email_loop_check_hash()
@@ -79,23 +83,34 @@ class Handler:
         envelope.content = msg.as_bytes()
         return envelope
 
+    @staticmethod
+    def get_sender_receiver(envelope: Envelope):
+        """解析邮件的发件人和收件人"""
+        message = message_from_bytes(envelope.content)
+        from_header = message.get("From")
+        from_name, from_addr = parseaddr(from_header)
+        from_name = str(make_header(decode_header(from_name)))
+        sender = (from_name, from_addr)
+        recipients = []
+        for header in ("To", "Cc", "Bcc"):
+            if header in message:
+                recipients.extend(getaddresses([message[header]]))
+        receivers = [(name, addr) for name, addr in recipients]
+        return sender, receivers
+
     @classmethod
     async def __email_loop_check(cls, envelope: Envelope):
         """检查是否出现邮件死循环"""
         logger.info(f'Checking email loop...')
 
         # 解析收件人和发件人
-        content = envelope.content
-        message = message_from_bytes(content)
-        from_header = message.get("From")
-        _, from_addr = parseaddr(from_header)
-        recipients = []
-        for header in ("To", "Cc", "Bcc"):
-            if header in message:
-                recipients.extend(getaddresses([message[header]]))
-        to_addrs = [addr for _, addr in recipients]
+        sender, receivers = cls.get_sender_receiver(envelope)
+        from_addr = sender[1]
+        to_addrs = [receiver[1] for receiver in receivers]
+        to_addrs_str = ','.join(to_addrs)
 
         # 拼接收发地址和邮件内容，计算哈希
+        content = envelope.content
         sep = b"\r\n\r\n"
         pos = content.find(sep)
         if pos == -1:
@@ -105,7 +120,7 @@ class Handler:
             body = content
         else:
             body = content[pos + len(sep):]
-        body = f'From:{from_addr} To:{to_addrs} '.encode() + body
+        body = f'From:{from_addr} To:{to_addrs_str} '.encode() + body
         body_hash = hashlib.sha256(body).hexdigest()
         logger.debug(f'Email hash: {body_hash}')
         now = datetime.now()
@@ -189,6 +204,7 @@ class Handler:
             except (ValueError, IndexError):
                 logger.warning(f'Unexpected exception while decoding exception: {e}')
                 return f'550 Service error: {e}'
+
 
 async def start():
     if inspect.iscoroutinefunction(adapter.start):
