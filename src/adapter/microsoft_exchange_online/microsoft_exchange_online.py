@@ -62,6 +62,7 @@ class Adapter(AdapterBase):
         self.__access_token: str | None = None
         self.__access_token_expiring_time: datetime | None = None
         self.__existing_users: list = []  # 已有用户的缓存
+        self.__creating_users: list = []
 
     async def __check_access_token(self):
         # 当token不存在或者即将过期，更新token
@@ -91,6 +92,15 @@ class Adapter(AdapterBase):
         # 当用户不存在时，创建用户的共享邮箱并分配`SendAs`权限
         if user_addr not in self.__existing_users:
             logger.info(f"New user found. Creating user `{user_addr}`...")
+
+            # 检查待创建的地址是否正在被其他任务创建，如果是的话，等待创建完毕后返回
+            if user_addr not in self.__creating_users:
+                self.__creating_users.append(user_addr)
+            else:
+                while user_addr in self.__creating_users:
+                    await asyncio.sleep(1)
+                return
+
             if user_name == '':
                 user_name = user_addr.split('@')[0]
             cmd = [
@@ -128,6 +138,7 @@ class Adapter(AdapterBase):
             else:
                 logger.info(f'Created new user `{user_name} <{user_addr}>`.')
                 self.__existing_users.append(user_addr)
+                self.__creating_users.remove(user_addr)
                 logger.info('Waiting 15s for Exchange Online...')
                 await asyncio.sleep(self.CONFIG.initial_user_waiting_seconds)  # Exchange Online 处理较慢，需要等待
 
