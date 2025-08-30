@@ -6,12 +6,12 @@ log:  # 日志配置
 smtp_server:  # SMTP服务器配置
   listen_host: 0.0.0.0  # 监听地址
   listen_port: 25  # 监听端口
-  stop_email_loop: true
-  email_loop_threshold: 3
-  email_loop_check_time_minutes: 3
-  email_loop_ban_time_minutes: 30
-  email_loop_alert_from_email: ''
-  email_loop_alert_to_email: ''
+  stop_email_loop: true  # 检测到邮件循环即停止
+  email_loop_threshold: 3  # 检测邮件循环的数量阈值
+  email_loop_check_time_minutes: 3  # 检测邮件循环的时间阈值（分钟）
+  email_loop_ban_time_minutes: 30  # 检测到邮件循环后，对相同的邮件封禁的时间（分钟）
+  email_loop_alert_from_email: ''  # 邮件循环告警的发信地址
+  email_loop_alert_to_email: ''  # 邮件循环告警的收信地址
 
 adapter:  # 后端转发适配器配置
   use: microsoft_exchange_online  # 使用哪个适配器
