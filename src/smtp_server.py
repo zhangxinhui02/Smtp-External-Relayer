@@ -23,10 +23,25 @@ class Handler:
     __email_loop_check_hash = {}
 
     @classmethod
-    async def task_clean_email_loop_chack_hash(cls):
+    async def task_clean_email_loop_check_hash(cls):
         """定时清理无用的邮件哈希记录的后台任务"""
+
+        def __show_email_loop_check_hash():
+            if len(cls.__email_loop_check_hash) == 0:
+                logger.debug(f'\tEmpty record.')
+            for _mail_hash, _mail_data in cls.__email_loop_check_hash.items():
+                debug_msg = 'OK.' if _mail_data is None \
+                    else f'Banned until {_mail_data["ban_until"].strftime("%Y-%m-%d %H:%M:%S")}.'
+                logger.debug(f'\t{_mail_hash}: {debug_msg}')
+                for _mail_time in mail_data['time_history']:
+                    logger.debug(f'\t\t{_mail_time.strftime("%Y-%m-%d %H:%M:%S")}')
+
         while True:
             await asyncio.sleep(600)
+
+            logger.debug(f'Before cleaning email loop check hash:')
+            __show_email_loop_check_hash()
+
             now = datetime.now()
             for mail_hash, mail_data in cls.__email_loop_check_hash.items():
                 if mail_data['ban_until'] is not None:
@@ -42,6 +57,9 @@ class Handler:
                     del cls.__email_loop_check_hash[mail_hash]
                 else:
                     cls.__email_loop_check_hash[mail_hash]['time_history'] = mail_time_history
+
+            logger.debug(f'After cleaning email loop check hash:')
+            __show_email_loop_check_hash()
 
     @staticmethod
     def __gen_email_loop_alert_envelope(from_name, from_addr, to_addr, text, attachment):
@@ -179,7 +197,7 @@ async def start():
         await adapter.start()
     else:
         adapter.start()
-    asyncio.create_task(Handler.task_clean_email_loop_chack_hash())
+    asyncio.create_task(Handler.task_clean_email_loop_check_hash())
     controller = Controller(Handler(), hostname=SMTP.listen_host, port=SMTP.listen_port)
     controller.start()
     logger.info(f'SMTP server listening on {SMTP.listen_host}:{SMTP.listen_port}.')
