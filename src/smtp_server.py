@@ -13,6 +13,7 @@ from email.utils import parseaddr, formataddr
 from aiosmtpd.smtp import Envelope
 from aiosmtpd.controller import Controller
 from config import SMTP, ADAPTER
+from util import get_local_ip
 
 logger = logging.getLogger(__name__)
 logging.getLogger('mail.log').setLevel(logging.WARNING)
@@ -207,11 +208,13 @@ class Handler:
 
 
 async def start():
-    if inspect.iscoroutinefunction(adapter.start):
-        await adapter.start()
-    else:
-        adapter.start()
+    # if inspect.iscoroutinefunction(adapter.start):
+    #     await adapter.start()
+    # else:
+    #     adapter.start()
     asyncio.create_task(Handler.task_clean_email_loop_check_hash())
+    if SMTP.listen_host == 'auto':
+        SMTP.listen_host = get_local_ip()
     controller = Controller(Handler(), hostname=SMTP.listen_host, port=SMTP.listen_port)
     controller.start()
     logger.info(f'SMTP server listening on {SMTP.listen_host}:{SMTP.listen_port}.')

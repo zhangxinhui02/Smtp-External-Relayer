@@ -4,7 +4,7 @@ log:  # 日志配置
   dump_retain_days: 30  # 日志保留天数
 
 smtp_server:  # SMTP服务器配置
-  listen_host: 0.0.0.0  # 监听地址
+  listen_host: auto  # 监听地址，设置为auto会自动获取合适的IP地址
   listen_port: 25  # 监听端口
   stop_email_loop: true  # 检测到邮件循环即停止
   email_loop_threshold: 3  # 检测邮件循环的数量阈值

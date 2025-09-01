@@ -9,7 +9,7 @@ class LogConfig(BaseModel):
   dump_retain_days: int = 7
 
 class SmtpServerConfig(BaseModel):
-  listen_host: str = '0.0.0.0'
+  listen_host: str = 'auto'
   listen_port: int = 25
   stop_email_loop: bool = True
   email_loop_threshold: int = 3
