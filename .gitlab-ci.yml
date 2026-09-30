@@ -1,3 +1,12 @@
+# 只在默认分支（main）上运行流水线。
+# 其他分支的推送、以及 MR 事件都不会创建流水线：
+#   - 非 main 分支 push            → $CI_COMMIT_BRANCH 有值但不等于默认分支 → 跳过
+#   - merge request 事件           → 该上下文里 $CI_COMMIT_BRANCH 为空 → 跳过
+# 需要跑 CI 时，把改动合并进 main（或在网页上对 main 手动 Run pipeline）。
+workflow:
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+
 stages:
   - build
 
