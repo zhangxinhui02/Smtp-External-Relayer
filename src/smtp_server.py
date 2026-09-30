@@ -208,10 +208,17 @@ class Handler:
 
 
 async def start():
-    # if inspect.iscoroutinefunction(adapter.start):
-    #     await adapter.start()
-    # else:
-    #     adapter.start()
+    # 初始化适配器：缓存已有用户列表、预热 access token。
+    # 初始化失败时不要拉倒 SMTP 监听，否则发信方只会看到连接被断开，
+    # 既拿不到失败原因，也无法按 4xx/5xx 的语义决定是重试还是退信。
+    try:
+        if inspect.iscoroutinefunction(adapter.start):
+            await adapter.start()
+        else:
+            adapter.start()
+    except Exception as e:
+        logger.error(f'Failed to initialize adapter `{ADAPTER.use}`: {e}')
+        logger.error('SMTP server keeps running; affected mails will be retried by the sender.')
     asyncio.create_task(Handler.task_clean_email_loop_check_hash())
     if SMTP.listen_host == 'auto':
         SMTP.listen_host = get_local_ip()
